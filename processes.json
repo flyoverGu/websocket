@@ -1,0 +1,15 @@
+{
+  "apps" : [{
+    "name": "socket-1",
+    "script": "app.js",
+    "env": {
+        "PORT": 9001
+    }
+  }, {
+    "name": "socket-2",
+    "script": "app.js",
+    "env": {
+        "PORT": 9002
+    }
+  }]
+}
