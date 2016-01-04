@@ -1,15 +1,10 @@
 {
   "apps" : [{
-    "name": "socket-1",
+    "name": "socket",
     "script": "app.js",
+    "node-args": "--nouse-idle-notification --gc_global --max-old-space-size=2048 --max-new-space-size=1024",
     "env": {
         "PORT": 9001
-    }
-  }, {
-    "name": "socket-2",
-    "script": "app.js",
-    "env": {
-        "PORT": 9002
     }
   }]
 }

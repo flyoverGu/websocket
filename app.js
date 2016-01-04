@@ -1,6 +1,13 @@
 'use strict';
 
+require("http").globalAgent.maxSockets = Infinity;
 let io = require('socket.io')(process.env.PORT || 9001);
+let redis = require('socket.io-redis');
+
+io.adapter(redis({
+    host: 'localhost',
+    port: 6379
+}));
 
 let count = 0;
 io.on('connection', (socket) => {
