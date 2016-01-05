@@ -1,34 +1,31 @@
 'use strict';
 
 require("http").globalAgent.maxSockets = Infinity;
-let io = require('socket.io')(process.env.PORT || 9001);
-let redis = require('socket.io-redis');
 
-io.adapter(redis({
-    host: 'localhost',
-    port: 6379
-}));
+
+let Primus = require('primus');
+let http = require('http');
+
+var server = http.createServer();
+var primus = new Primus(server, {
+    transformer: 'sockjs'
+});
 
 let count = 0;
-io.on('connection', (socket) => {
+primus.on('connection', (spark) => {
     count++;
-    console.log('connect!! id: ' + socket.id + ' count ' + count);
-
-    socket.on('msg', (msg) => {
-        console.log('accept::', msg);
-        socket.emit('return', {
-            data: 'get some thing'
-        });
+    console.log('connection id:', spark.id, 'count:', count);
+    spark.on('data', (data) => {
+        console.log(spark.id, 'received message:', data);
+        spark.write(data);
     });
 
-    socket.on('disconnect', (err) => {
+    spark.on('end', () => {
         count--;
-        console.log(err + '  disconnect count ', count);
+        console.log('end', count);
     });
-
-    //setInterval(function() {
-    //    socket.emit('heart', 'r');
-    //}, 15000);
-
 });
-console.log('start!!');
+
+server.listen(9001, () => {
+    console.log('start !!');
+});
